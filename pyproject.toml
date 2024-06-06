@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "technical-support-tg-bot"
+version = "0.1.0"
+description = ""
+authors = ["andrei_turobov <forgunn@yandex.ru>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-telegram-bot = "^21.2"
+django-environ = "^0.11.2"
+pydantic = "^2.7.3"
+pydantic-settings = "^2.3.1"
+dishka = "^1.2.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
