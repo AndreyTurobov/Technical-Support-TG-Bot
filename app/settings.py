@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 
 
 env = environ.Env()
-environ.Env.read_env('.env')
+environ.Env.read_env('../.env')
 
 
 class ProjectSettings(BaseSettings):
@@ -18,7 +18,10 @@ class ProjectSettings(BaseSettings):
             '/chats, choose a chat: /set_chats <chat_oid>'
         ),
     )
-    WEB_API_BASE_URL: str = env('WEB_API_BASE_URL', default='http://localhost:8000')
+    WEB_API_BASE_URL: str = env('WEB_API_BASE_URL', default='http://main-app:8000')
+    KAFKA_BROKER_URL: str = env('KAFKA_BROKER_URL', default='kafka:29092')
+    NEW_MESSAGE_TOPIC: str = env('NEW_MESSAGE_TOPIC', default='new-messages')
+    KAFKA_GROUP_ID: str = env('KAFKA_GROUP_ID', default='tg-bot')
 
 
 @lru_cache(1)

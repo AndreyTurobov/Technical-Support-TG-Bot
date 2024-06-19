@@ -16,5 +16,19 @@ async def get_all_chats_handlers(update: Update, context: ContextTypes.DEFAULT_T
     await context.bot.send_message(
         chat_id=update.effective_chat.id,  # type: ignore
         text=convert_chats_dtos_to_message(chats=chats),
-        parse_mode='MarkdownV2',
+        parse_mode='HTML',
+    )
+
+
+async def set_chat_handlers(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    container = get_container()
+
+    async with container() as request_container:
+        service = await request_container.get(BaseChatWebService)  # type: ignore
+        chats = await service.set_chat()
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,  # type: ignore
+        text=convert_chats_dtos_to_message(chats=chats),
+        parse_mode='HTML',
     )

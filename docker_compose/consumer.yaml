@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  bot_consumer:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+
+    container_name: bot-faststream
+
+    environment:
+      KAFKA_URL: ${KAFKA_URL:?}
+
+    ports:
+      - "8000"
+    volumes:
+      - ../app/:/app/
+      - ../.env:/app/.env
+
+    command: "faststream run consumers.main:app"

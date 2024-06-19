@@ -1,4 +1,7 @@
-from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+)
 
 from handlers.base import start_handler
 from handlers.chats import get_all_chats_handlers
