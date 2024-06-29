@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 
 
 env = environ.Env()
-environ.Env.read_env('../.env')
+environ.Env.read_env('.env')
 
 
 class ProjectSettings(BaseSettings):

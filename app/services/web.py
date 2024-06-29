@@ -9,10 +9,13 @@ from dtos.messages import (
     ChatListenerDTO,
 )
 from exceptions.chats import (
+    ChatInfoRequestError,
     ChatListRequestError,
+    ListenerAddRequestError,
     ListenerListRequestError,
 )
 from services.constants import (
+    CHAT_INFO_URI,
     CHAT_LIST_URI,
     CHAT_LISTENERS_URI,
     DEFAULT_LIMIT,
@@ -38,7 +41,11 @@ class BaseChatWebService(ABC):
         ...
 
     @abstractmethod
-    async def set_chat(self, chat_oid: str) -> str:
+    async def add_listener(self, telegram_chat_id: int, chat_oid: str) -> str:
+        ...
+
+    @abstractmethod
+    async def get_chat_info(self, chat_oid: str) -> ChatListItemDTO:
         ...
 
 
@@ -66,6 +73,39 @@ class ChatWebService(BaseChatWebService):
             for chat_data in json_data['items']
         ]
 
+    async def add_listener(self, telegram_chat_id: int, chat_oid: str) -> None:
+        response = await self.http_client.post(
+            url=urljoin(
+                base=self.base_url,
+                url=CHAT_LISTENERS_URI.format(chat_oid=chat_oid),
+            ),
+            json={'telegram_chat_id': telegram_chat_id},
+        )
+
+        if not response.is_success:
+            raise ListenerAddRequestError(
+                status_code=response.status_code,
+                response_content=response.content.decode(),
+            )
+
+    async def get_chat_info(self, chat_oid: str) -> ChatListItemDTO:
+        response = await self.http_client.get(
+            url=urljoin(
+                base=self.base_url,
+                url=CHAT_INFO_URI.format(chat_oid=chat_oid),
+            ),
+        )
+
+        if not response.is_success:
+            raise ChatInfoRequestError(
+                status_code=response.status_code,
+                response_content=response.content.decode(),
+            )
+
+        json_data = response.json()
+
+        return convert_chat_response_to_chat_dto(chat_data=json_data)
+
     async def get_chat_listeners(self, chat_oid: str) -> list[ChatListenerDTO]:
         response = await self.http_client.get(
             url=urljoin(base=self.base_url, url=CHAT_LISTENERS_URI.format(chat_oid=chat_oid)),
@@ -83,10 +123,3 @@ class ChatWebService(BaseChatWebService):
             convert_chat_listener_response_to_listener_dto(listener_data=listener_data)
             for listener_data in json_data
         ]
-
-    async def set_chat(self, chat_oid: str):
-        await self.http_client.post(
-            url=urljoin(base=self.base_url, url=CHAT_LISTENERS_URI.format(chat_oid=chat_oid)),
-        )
-
-        return chat_oid

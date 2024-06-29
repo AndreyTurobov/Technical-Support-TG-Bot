@@ -9,7 +9,7 @@ services:
     container_name: bot-faststream
 
     environment:
-      KAFKA_URL: ${KAFKA_URL:?}
+      KAFKA_URL: kafka:29092
 
     ports:
       - "8000"
@@ -17,4 +17,4 @@ services:
       - ../app/:/app/
       - ../.env:/app/.env
 
-    command: "faststream run consumers.main:app"
+    command: "faststream run --factory consumers.main:get_app --reload"
