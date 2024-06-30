@@ -6,7 +6,7 @@ services:
       context: ..
       dockerfile: Dockerfile
 
-    container_name: bot-faststream
+    container_name: "bot-faststream"
 
     environment:
       KAFKA_URL: kafka:29092
@@ -18,3 +18,10 @@ services:
       - ../.env:/app/.env
 
     command: "faststream run --factory consumers.main:get_app --reload"
+
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

@@ -5,8 +5,8 @@ FROM python:3.12.2-slim-bullseye AS builder
 COPY pyproject.toml poetry.lock ./
 
 # Установка poetry и формирование файла с зависимостями
-RUN python -m pip install poetry &&\
-    poetry export --without-hashes -o requirements.txt
+RUN python -m pip install poetry==1.8.2 &&\
+    poetry export -o requirements.txt --without-hashes
 
 # Этап сборки приложения
 FROM python:3.12.2-slim-bullseye AS dev
