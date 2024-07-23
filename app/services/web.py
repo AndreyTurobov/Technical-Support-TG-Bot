@@ -41,7 +41,7 @@ class BaseChatWebService(ABC):
         ...
 
     @abstractmethod
-    async def add_listener(self, telegram_chat_id: int, chat_oid: str) -> str:
+    async def add_listener(self, telegram_chat_id: int, chat_oid: str):
         ...
 
     @abstractmethod
@@ -73,13 +73,31 @@ class ChatWebService(BaseChatWebService):
             for chat_data in json_data['items']
         ]
 
+    async def get_chat_listeners(self, chat_oid: str) -> list[ChatListenerDTO]:
+        response = await self.http_client.get(
+            url=urljoin(base=self.base_url, url=CHAT_LISTENERS_URI.format(chat_oid=chat_oid)),
+        )
+        print(response.content)
+        if not response.is_success:
+            print(response.content.decode())
+            raise ListenerListRequestError(
+                status_code=response.status_code,
+                response_content=response.content.decode(),
+            )
+
+        json_data = response.json()
+
+        return [convert_chat_listener_response_to_listener_dto(
+            listener_data=listener_data) for listener_data in json_data
+        ]
+
     async def add_listener(self, telegram_chat_id: int, chat_oid: str) -> None:
         response = await self.http_client.post(
             url=urljoin(
                 base=self.base_url,
                 url=CHAT_LISTENERS_URI.format(chat_oid=chat_oid),
             ),
-            json={'telegram_chat_id': telegram_chat_id},
+            json={'telegram_chat_id': str(telegram_chat_id)}
         )
 
         if not response.is_success:
@@ -105,21 +123,3 @@ class ChatWebService(BaseChatWebService):
         json_data = response.json()
 
         return convert_chat_response_to_chat_dto(chat_data=json_data)
-
-    async def get_chat_listeners(self, chat_oid: str) -> list[ChatListenerDTO]:
-        response = await self.http_client.get(
-            url=urljoin(base=self.base_url, url=CHAT_LISTENERS_URI.format(chat_oid=chat_oid)),
-        )
-
-        if not response.is_success:
-            raise ListenerListRequestError(
-                status_code=response.status_code,
-                response_content=response.content.decode(),
-            )
-
-        json_data = response.json()
-
-        return [
-            convert_chat_listener_response_to_listener_dto(listener_data=listener_data)
-            for listener_data in json_data
-        ]

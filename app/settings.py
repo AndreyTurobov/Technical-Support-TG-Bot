@@ -15,7 +15,7 @@ class ProjectSettings(BaseSettings):
         default=(
             'Welcome to techsupport bot.\n'
             'Please choose a chat for client support.\nGet all available chats: ' 
-            '/chats, choose a chat: /set_chats <chat_oid>'
+            '/chats, choose a chat: /listen_chat <chat_oid>'
         ),
     )
     WEB_API_BASE_URL: str = env('WEB_API_BASE_URL', default='http://main-app:8000')

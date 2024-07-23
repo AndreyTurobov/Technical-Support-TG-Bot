@@ -1,8 +1,15 @@
-from dishka import provide, Provider, Scope
+from dishka import (
+    provide,
+    Provider,
+    Scope,
+)
 from httpx import AsyncClient
 from telegram import Bot
 
-from services.web import BaseChatWebService, ChatWebService
+from services.web import (
+    BaseChatWebService,
+    ChatWebService,
+)
 from settings import ProjectSettings
 
 
