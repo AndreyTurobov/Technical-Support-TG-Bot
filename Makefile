@@ -1,4 +1,4 @@
-DC = docker-compose
+DC = docker compose
 CONSUMER_APP = docker_compose/consumer.yaml
 BOT_APP = docker_compose/bot.yaml
 ENV = --env-file .env
