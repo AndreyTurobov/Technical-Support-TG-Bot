@@ -74,13 +74,15 @@ async def send_message_to_chat(update: Update, context: ContextTypes.DEFAULT_TYP
 
     print(update.message.reply_to_message.text)
     try:
-        chat_oid = re.findall(r'\s{1}\(.+\)', update.message.reply_to_message.text)[0].replace(' ', '',).replace('(', '').replace(')', '')
+        chat_oid = re.findall(r'\s{1}\(.+\)', update.message.reply_to_message.text)[0].replace(
+            ' ', '',
+        ).replace('(', '').replace(')', '')
 
     except IndexError:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,  # type: ignore
             text="It is necessary to respond specifically to the user's message.",
-            # parse_mode='HTML',
+            parse_mode='HTML',
         )
 
         return
