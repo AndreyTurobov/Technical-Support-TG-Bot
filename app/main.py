@@ -16,6 +16,7 @@ from handlers.chats import (
     set_chat_listener,
     start_dialog,
 )
+from repositories.initialize import create_table
 from settings import get_settings
 
 
@@ -46,6 +47,8 @@ def get_app():
     application.add_handler(set_chat_listener_handler)
     application.add_handler(send_chat_messages_handler)
     application.add_error_handler(error_handler, block=True)
+
+    create_table()
 
     return application
 
