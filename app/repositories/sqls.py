@@ -5,3 +5,19 @@ CREATE_MAPPING_TABLE_SQL_QUERY = """
             PRIMARY KEY (web_chat_id, telegram_chat_id)
             );
             """
+ADD_NEW_CHAT_INFO = """
+            INSERT INTO chat_web_mapping (web_chat_id, telegram_chat_id)
+            VALUES (?, ?);
+            """
+GET_CHAT_INFO_BY_TELEGRAM_ID = """
+            SELECT * FROM chat_web_mapping 
+            WHERE telegram_chat_id = ?;
+            """
+GET_CHAT_INFO_BY_EXTERNAL_ID = """
+            SELECT * FROM chat_web_mapping 
+            WHERE web_chat_id = ?;
+            """
+GET_CHATS_COUNT = """
+            SELECT COUNT(*) FROM chat_web_mapping 
+            WHERE web_chat_id = ? OR telegram_chat_id = ?;
+            """

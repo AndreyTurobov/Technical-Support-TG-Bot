@@ -11,6 +11,7 @@ from repositories.chats.base import (
     BaseChatsRepository,
     SQLChatsRepository,
 )
+from services.chats import ChatsService
 from services.web import (
     BaseChatWebService,
     ChatWebService,
@@ -43,5 +44,12 @@ class DefaultProvider(Provider):
         return Bot(token=settings.TG_BOT_TOKEN)
 
     @provide(scope=Scope.REQUEST)
-    def get_chats_repository(self, settings: ProjectSettings) -> AnyOf[BaseChatsRepository, SQLChatsRepository]:
+    def get_chats_repository(
+            self,
+            settings: ProjectSettings,
+    ) -> AnyOf[BaseChatsRepository, SQLChatsRepository]:
         return SQLChatsRepository(database_url=settings.DATABASE_NAME)
+
+    @provide(scope=Scope.REQUEST)
+    def get_chats_service(self, repository: BaseChatsRepository) -> ChatsService:
+        return ChatsService(repository=repository)

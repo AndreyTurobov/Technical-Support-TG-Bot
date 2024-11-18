@@ -44,3 +44,23 @@ class ChatInfoRequestError(BaseWebException):
     @property
     def message(self):
         return "Couldn't get a information about the chat."
+
+
+@dataclass(frozen=True, eq=False)
+class ChatInfoNotFoundError(ApplicationException):
+    telegram_chat_id: str | None = None
+    web_chat_id: str | None = None
+
+    @property
+    def message(self,):
+        return "Couldn't find information about the chat."
+
+
+@dataclass(frozen=True, eq=False)
+class ChatAlreadyExistsError(ApplicationException):
+    telegram_chat_id: str | None = None
+    web_chat_id: str | None = None
+
+    @property
+    def message(self):
+        return "Chat with this data already exists."

@@ -77,7 +77,7 @@ class ChatWebService(BaseChatWebService):
         response = await self.http_client.get(
             url=urljoin(base=self.base_url, url=CHAT_LISTENERS_URI.format(chat_oid=chat_oid)),
         )
-        print(response.content)
+
         if not response.is_success:
             print(response.content.decode())
             raise ListenerListRequestError(

@@ -1,12 +1,19 @@
-import re
-
-from telegram import Update
+from telegram import (
+    Update,
+    Bot,
+)
 from telegram.ext import ContextTypes
 
 from containers.factories import get_container
-from handlers.constants import SEND_MESSAGE_STATE
 from handlers.converters.chats import convert_chats_dtos_to_message
 from services.web import BaseChatWebService
+
+
+async def get_tread_name(bot: Bot, chat_id: int, message_thread_id: int) -> str:
+    # TODO: refactor this
+    chat = await bot.get_chat(chat_id=chat_id)
+    message = await chat.get_messages(message_thread_id=message_thread_id)
+    return message.text
 
 
 async def get_all_chats_handlers(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -41,19 +48,6 @@ async def set_chat_listener(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
 
 
-async def start_dialog(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(
-        chat_id=update.effective_chat.id,  # type: ignore
-        text=(
-            'Now you are responding to messages. Select a message and '
-            'write a reply. The user will see your response on the site.'
-        ),
-        parse_mode='HTML',
-    )
-
-    return SEND_MESSAGE_STATE
-
-
 async def quit_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,  # type: ignore
@@ -63,21 +57,13 @@ async def quit_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def send_message_to_chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message.reply_to_message is None:  # type: ignore
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,  # type: ignore
-            text='Error! Select a message and write a reply.',
-            parse_mode='HTML',
-        )
-
-        return
-
-    print(update.message.reply_to_message.text)
+    await context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text="It is necessary to respond specifically to the user's message.",
+        message_thread_id=update.message.message_thread_id,
+    )
     try:
-        chat_oid = re.findall(r'\s{1}\(.+\)', update.message.reply_to_message.text)[0].replace(
-            ' ', '',
-        ).replace('(', '').replace(')', '')
-
+        ...
     except IndexError:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,  # type: ignore
@@ -86,5 +72,3 @@ async def send_message_to_chat(update: Update, context: ContextTypes.DEFAULT_TYP
         )
 
         return
-
-    print(chat_oid,)
