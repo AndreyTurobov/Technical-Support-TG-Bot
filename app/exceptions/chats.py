@@ -21,39 +21,22 @@ class BaseWebException(ApplicationException):
 @dataclass(frozen=True, eq=False)
 class ChatListRequestError(BaseWebException):
     @property
-    def message(self):
+    def message(self) -> str:
         return "Couldn't get a list of all chats."
 
 
 @dataclass(frozen=True, eq=False)
 class ListenerListRequestError(BaseWebException):
     @property
-    def message(self):
+    def message(self) -> str:
         return "Couldn't get a list of chat listeners."
 
 
 @dataclass(frozen=True, eq=False)
 class ListenerAddRequestError(BaseWebException):
     @property
-    def message(self):
+    def message(self) -> str:
         return "Couldn't add chat listener to the chat."
-
-
-@dataclass(frozen=True, eq=False)
-class ChatInfoRequestError(BaseWebException):
-    @property
-    def message(self):
-        return "Couldn't get a information about the chat."
-
-
-@dataclass(frozen=True, eq=False)
-class ChatInfoNotFoundError(ApplicationException):
-    telegram_chat_id: str | None = None
-    web_chat_id: str | None = None
-
-    @property
-    def message(self,):
-        return "Couldn't find information about the chat."
 
 
 @dataclass(frozen=True, eq=False)
@@ -62,5 +45,38 @@ class ChatAlreadyExistsError(ApplicationException):
     web_chat_id: str | None = None
 
     @property
-    def message(self):
+    def message(self) -> str:
         return "Chat with this data already exists."
+
+
+@dataclass(frozen=True, eq=False)
+class ChatInfoNotFoundError(ApplicationException):
+    telegram_chat_id: str | None = None
+    web_chat_id: str | None = None
+
+    @property
+    def message(self) -> str:
+        return "Couldn't find information about the chat."
+
+
+@dataclass(frozen=True, eq=False)
+class ChatNotFoundByTelegramIdError(ApplicationException):
+    telegram_chat_id: str
+
+    @property
+    def message(self) -> str:
+        return "Couldn't find chat by telegram chat id."
+
+
+@dataclass(frozen=True, eq=False)
+class ChatInfoRequestError(BaseWebException):
+    @property
+    def message(self) -> str:
+        return "Couldn't get a information about the chat."
+
+
+@dataclass(frozen=True, eq=False)
+class SendMessageToChatError(ApplicationException):
+    @property
+    def message(self) -> str:
+        return "Couldn't send message to the chat."

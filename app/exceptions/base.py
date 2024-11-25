@@ -7,9 +7,9 @@ from dataclasses import (
 @dataclass(frozen=True, eq=False)
 class ApplicationException(Exception):
     @property
-    def meta(self):
+    def meta(self) -> dict:
         return asdict(self)
 
     @property
-    def message(self):
+    def message(self) -> str:
         return 'An error has occurred in the operation of the application.'

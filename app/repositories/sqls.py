@@ -10,12 +10,14 @@ ADD_NEW_CHAT_INFO = """
             VALUES (?, ?);
             """
 GET_CHAT_INFO_BY_TELEGRAM_ID = """
-            SELECT * FROM chat_web_mapping 
-            WHERE telegram_chat_id = ?;
+            SELECT web_chat_id, telegram_chat_id FROM chat_web_mapping 
+            WHERE telegram_chat_id = ?
+            LIMIT 1;
             """
-GET_CHAT_INFO_BY_EXTERNAL_ID = """
-            SELECT * FROM chat_web_mapping 
-            WHERE web_chat_id = ?;
+GET_CHAT_INFO_BY_WEB_ID = """
+            SELECT web_chat_id, telegram_chat_id FROM chat_web_mapping 
+            WHERE web_chat_id = ?
+            LIMIT 1;
             """
 GET_CHATS_COUNT = """
             SELECT COUNT(*) FROM chat_web_mapping 
