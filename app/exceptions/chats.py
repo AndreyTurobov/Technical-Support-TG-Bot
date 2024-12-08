@@ -69,6 +69,15 @@ class ChatNotFoundByTelegramIdError(ApplicationException):
 
 
 @dataclass(frozen=True, eq=False)
+class ChatNotFoundByWebIdError(ApplicationException):
+    web_chat_id: str
+
+    @property
+    def message(self) -> str:
+        return "Couldn't find chat by web chat id."
+
+
+@dataclass(frozen=True, eq=False)
 class ChatInfoRequestError(BaseWebException):
     @property
     def message(self) -> str:

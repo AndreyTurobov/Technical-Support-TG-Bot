@@ -16,8 +16,9 @@ class ProjectSettings(BaseSettings):
     KAFKA_BROKER_URL: str = 'kafka:29092'
     NEW_MESSAGE_TOPIC: str = 'new-messages'
     NEW_CHAT_TOPIC: str = 'new-chats-topic'
+    DELETE_CHAT_TOPIC: str = 'chat-deleted'
     KAFKA_GROUP_ID: str = 'tg-bot'
-    DATABASE_NAME: str = 'tg-bot.db'
+    DATABASE_NAME: str = 'app/tg-bot.db'
     TELEGRAM_GROUP_ID: str
 
     model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')

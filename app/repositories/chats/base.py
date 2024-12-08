@@ -10,6 +10,7 @@ from dtos.messages import ChatInfoDTO
 from exceptions.chats import ChatInfoNotFoundError
 from repositories.sqls import (
     ADD_NEW_CHAT_INFO,
+    DELETE_CHAT_QUERY,
     GET_CHATS_COUNT,
     GET_CHAT_INFO_BY_WEB_ID,
     GET_CHAT_INFO_BY_TELEGRAM_ID,
@@ -35,6 +36,10 @@ class BaseChatsRepository(ABC):
 
     @abstractmethod
     async def add_chat(self, chat_info: ChatInfoDTO) -> ChatInfoDTO:
+        ...
+
+    @abstractmethod
+    async def delete_chat(self, web_chat_id: str = '', telegram_chat_id: str = '') -> None:
         ...
 
 
@@ -85,7 +90,7 @@ class SQLChatsRepository(BaseChatsRepository):
         web_chat_id, telegram_chat_id = next(iter(result))
 
         return ChatInfoDTO(
-            telegram_chat_id=telegram_chat_id,
+            telegram_chat_id=str(telegram_chat_id),
             web_chat_id=web_chat_id,
         )
 
@@ -95,7 +100,7 @@ class SQLChatsRepository(BaseChatsRepository):
         telegram_chat_id: str | None = None,
     ) -> bool:
         async with connect(self.database_url) as connection:
-            result = await connection.execute_insert(
+            result = await connection.execute_fetchall(
                 GET_CHATS_COUNT,
                 (web_chat_id, telegram_chat_id)
             )
@@ -103,4 +108,14 @@ class SQLChatsRepository(BaseChatsRepository):
         if result is None:
             return False
 
+        result, *_ = result
+
         return result[0] > 0
+
+    async def delete_chat(self, web_chat_id: str = '', telegram_chat_id: str = '') -> None:
+        async with connect(self.database_url) as connection:
+            await connection.execute(
+                DELETE_CHAT_QUERY,
+                (web_chat_id, telegram_chat_id)
+            )
+            await connection.commit()
